@@ -69,3 +69,15 @@ __Note: Although 4chan provides a list of thread objects, the relpies to each th
 Logging is logged to `4chan_catalog_scraper_custom.log` 
 
 To aid scheduling, the script will store each scrape `.json` file with a timestamp under a folder named with the year and month.
+
+## 8kun Scraper v0.1
+
+The 8kun scraper uses no APIs or libraries and scrapes simply from the raw HTML returned by 8kun.top
+
+The scraper does the following:
+1. Iterates through pages 1 and 10 gathering post ids (it is often the case that not all comments are visible in the paginated mode hence we scrape comments in step 2)
+2. Iterates through the post ids gathered, downloading and storing the entire HTML document returned, which is the unique page for that post containing all comments. E.g. https://8kun.top/pnd/res/701.html#701
+
+The filenames and logging are the same as above.
+
+Note: I included a timeout method in the 8kun scraper (using signal.alarm) since 8kun sometimes randomly hangs or blocks the connection. This results in the scraper hanging on trying to download one specific post. After 60 seconds of waiting, that post html page will be abandoned and the next will be attempted. This is a rare occurrence and I have included a wait method between each request to reduce the risk of being blocked but it does still periodically occur.
